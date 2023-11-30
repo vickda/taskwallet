@@ -1,17 +1,18 @@
-'use client';
+import { signOut } from "next-auth/react";
+import Login from "../Components/Login";
+import { redirect } from "next/dist/server/api-utils";
+import { getServerSession } from "next-auth";
+import Todo from "./todo/page";
 
-import { signOut, useSession } from "next-auth/react";
-import Navbar from "./Navbar";
+export default async function Home() {
+    const session = await getServerSession();
 
-export default function Home() {
-    const session = useSession();
-    console.log(session);
+    if(session) return <Todo/>
+
     return (
-    <>
-        <Navbar/>
-        <div>Welcome {session?.data?.user?.name}</div>
-        <button onClick={() => signOut()}>Logout</button>
-    </>
+        <>
+        <Login/>
+        </>
     )
     
 }

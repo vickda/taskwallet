@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+html{
+  height: 100vh;
+}
+
+body {
+  background-color: #2f3640; /* Replace with your preferred color */
+  margin: 0;
+  /* font-family: Arial, Helvetica, sans-serif; */
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -18,10 +28,6 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  /* background-color: #2f3640 */
+  background-color: #1e293b
 }
