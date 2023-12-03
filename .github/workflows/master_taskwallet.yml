@@ -37,8 +37,7 @@ jobs:
     needs: build
     environment:
       name: "Production"
-      url: "https://polite-grass-0a612d810.4.azurestaticapps.net"
-      # url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
