@@ -1,7 +1,7 @@
 'use client';
 import Link from "next/link";
 import React, { useState } from "react";
-// import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 import logo1 from '../images/logo1.jpg'
 import { signOut } from "next-auth/react";
 import '../css/globals.css' 
@@ -64,7 +64,7 @@ const Navbar = () => {
         onClick={() => setNav(!nav)}
         className="cursor-pointer pr-4 z-10 text-gray-500 md:hidden"
       >
-        {/* {nav ? <FaTimes size={30} /> : <FaBars size={30} />} */}
+        {nav ? <FaTimes size={30} /> : <FaBars size={30} />}
       </div>
 
       {nav && (

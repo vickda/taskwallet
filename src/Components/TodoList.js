@@ -1,8 +1,39 @@
-'use client';
+"use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Modal from "../Components/Modal";
 
-function TodoList() {
+const url = `http://localhost:3000/api/todo?`;
+
+const addTodo = async (newTodo, email) => {
+  console.log(newTodo, "asd");
+  try {
+    await fetch(`${url}${new URLSearchParams({ email })}`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(newTodo),
+    });
+  } catch (error) {
+    console.log("Cannot add todo in db", error);
+  }
+};
+const updateTodo = async (email, id) => {};
+const deleteTodo = async (email, id) => {
+  try {
+    await fetch(`${url}${new URLSearchParams({ email, id })}`, {
+      method: "DELETE",
+      mode: "cors",
+    });
+  } catch (error) {
+    console.log("Cannot Delete todo in db", error);
+  }
+};
+
+function TodoList({ email }) {
   // state for the input value
   const [value, setValue] = useState("");
 
@@ -17,13 +48,17 @@ function TodoList() {
     setValue(e.target.value);
   };
 
-  // function to handle form submission
-  const handleSubmit = (e) => {
+  // function to Add Todo
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // check if the input is not empty
     if (value.trim()) {
       // create a new todo object with the input value and a unique id
-      const newTodo = { text: value, id: Date.now(), done: false };
+      const newTodo = { title: value, done: false };
+
+      // Add data into db
+      await addTodo(newTodo, email);
+
       // update the todo list with the new todo
       setTodos((prevTodos) => [newTodo, ...prevTodos]);
       // clear the input value
@@ -31,7 +66,7 @@ function TodoList() {
     }
   };
 
-  // function to handle todo completion
+  // function to Makr Todo Complete
   const handleComplete = (id) => {
     // find the index of the todo with the given id
     const index = todos.findIndex((todo) => todo.id === id);
@@ -44,7 +79,9 @@ function TodoList() {
   };
 
   // function to handle todo deletion
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
+    await handleDelete(email, id);
+
     // filter out the todo with the given id
     const newTodos = todos.filter((todo) => todo.id !== id);
     // update the todo list with the filtered copy
@@ -53,6 +90,7 @@ function TodoList() {
 
   // function to filter the todos based on the active tab
   const filterTodos = () => {
+    console.log(todos, "Insie");
     switch (active) {
       case "All":
         return todos;
@@ -64,6 +102,34 @@ function TodoList() {
         return todos;
     }
   };
+
+  // Use effect to fill data from database
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log(email);
+        const response = await fetch(
+          `${url}${new URLSearchParams({ email })}`,
+          {
+            method: "GET",
+            mode: "cors",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch todos");
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setTodos(data.todos);
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="todo min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
@@ -102,30 +168,30 @@ function TodoList() {
         <ul className="mt-10">
           {filterTodos().map((todo) => (
             <li
-              key={todo.id}
+              key={todo._id}
               className={`flex items-center justify-between px-4 py-2 mb-2 rounded-lg shadow-lg ${
                 todo.done ? "bg-green-200" : "bg-white"
               }`}
             >
               <span
-                onClick={() => handleComplete(todo.id)}
+                onClick={() => handleComplete(todo._id)}
                 className={`text-lg font-medium cursor-pointer ${
                   todo.done ? "line-through text-gray-500" : "text-gray-800"
                 }`}
               >
-                {todo.text}
+                {todo.title}
               </span>
               <div className="flex space-x-2">
                 {!todo.done && (
                   <button
-                    onClick={() => handleComplete(todo.id)}
+                    onClick={() => handleComplete(todo._id)}
                     className="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors duration-300 ease-in-out"
                   >
                     Done
                   </button>
                 )}
                 <button
-                  onClick={() => handleDelete(todo.id)}
+                  onClick={() => handleDelete(todo._id)}
                   className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors duration-300 ease-in-out"
                 >
                   Delete
