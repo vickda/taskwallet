@@ -6,7 +6,6 @@ import Modal from "../Components/Modal";
 const url = `http://localhost:3000/api/todo?`;
 
 const addTodo = async (newTodo, email) => {
-  console.log(newTodo, "asd");
   try {
     await fetch(`${url}${new URLSearchParams({ email })}`, {
       method: "POST",
@@ -21,12 +20,26 @@ const addTodo = async (newTodo, email) => {
     console.log("Cannot add todo in db", error);
   }
 };
-const updateTodo = async (email, id) => {};
 const deleteTodo = async (email, id) => {
   try {
-    await fetch(`${url}${new URLSearchParams({ email, id })}`, {
+    await fetch(`${url}${new URLSearchParams({ email: email, todoId: id })}`, {
       method: "DELETE",
       mode: "cors",
+    });
+  } catch (error) {
+    console.log("Cannot Delete todo in db", error);
+  }
+};
+const updateTodo = async (email, id, newTodo) => {
+  try {
+    await fetch(`${url}${new URLSearchParams({ email: email, todoId: id })}`, {
+      method: "PUT",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(newTodo),
     });
   } catch (error) {
     console.log("Cannot Delete todo in db", error);
@@ -60,37 +73,42 @@ function TodoList({ email }) {
       await addTodo(newTodo, email);
 
       // update the todo list with the new todo
-      setTodos((prevTodos) => [newTodo, ...prevTodos]);
+      await fetchData();
+      // setTodos((prevTodos) => [newTodo, ...prevTodos]);
       // clear the input value
       setValue("");
     }
   };
 
   // function to Makr Todo Complete
-  const handleComplete = (id) => {
+  const handleComplete = async (id) => {
     // find the index of the todo with the given id
-    const index = todos.findIndex((todo) => todo.id === id);
+
+    const index = todos.findIndex((todo) => todo._id === id);
     // create a copy of the todo list
     const newTodos = [...todos];
+
     // set the done property of the todo at the index to true
     newTodos[index].done = true;
-    // update the todo list with the modified copy
-    setTodos(newTodos);
+
+    await updateTodo(email, id, newTodos[index]);
+    await fetchData();
   };
 
   // function to handle todo deletion
   const handleDelete = async (id) => {
-    await handleDelete(email, id);
+    await deleteTodo(email, id);
 
     // filter out the todo with the given id
     const newTodos = todos.filter((todo) => todo.id !== id);
     // update the todo list with the filtered copy
     setTodos(newTodos);
+    fetchData();
   };
 
   // function to filter the todos based on the active tab
   const filterTodos = () => {
-    console.log(todos, "Insie");
+    // console.log(todos, "Insie");
     switch (active) {
       case "All":
         return todos;
@@ -103,31 +121,27 @@ function TodoList({ email }) {
     }
   };
 
-  // Use effect to fill data from database
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log(email);
-        const response = await fetch(
-          `${url}${new URLSearchParams({ email })}`,
-          {
-            method: "GET",
-            mode: "cors",
-          }
-        );
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${url}${new URLSearchParams({ email })}`, {
+        method: "GET",
+        mode: "cors",
+        cache: "no-store",
+      });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch todos");
-        }
-
-        const data = await response.json();
-        console.log(data);
-        setTodos(data.todos);
-      } catch (error) {
-        console.error("Error fetching todos:", error);
+      if (!response.ok) {
+        throw new Error("Failed to fetch todos");
       }
-    };
 
+      const data = await response.json();
+      setTodos(data.todos);
+    } catch (error) {
+      console.error("Error fetching todos:", error);
+    }
+  };
+
+  // // Use effect to fill data from database
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -151,9 +165,9 @@ function TodoList({ email }) {
       </form>
       <div className="w-3/4 md:w-1/2 mt-10">
         <div className="flex justify-between">
-          {["All", "Open", "Completed"].map((type) => (
+          {["All", "Open", "Completed"].map((type, idx) => (
             <button
-              key={type}
+              key={idx}
               className={`text-xl font-medium px-4 py-2 rounded-lg ${
                 active === type
                   ? "bg-white text-gray-900 shadow-lg"

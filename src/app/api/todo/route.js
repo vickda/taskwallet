@@ -67,8 +67,6 @@ export async function DELETE(req, { params }) {
       (todo) => todo._id.toString() === todoId
     );
 
-    await console.log(user.todos, todoIndex);
-
     if (todoIndex === -1) {
       return NextResponse.json({
         status: 404,
