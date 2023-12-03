@@ -18,28 +18,37 @@ const userTodoSchema = new Schema({
       done: Boolean,
     },
   ],
-  sharedTodo: [
-    {
-      groupList: [
-        {
-          title: String,
-          link: String,
-          accepted: Boolean,
-        },
-      ],
-    },
-  ],
-  finance: [
-    {
-      groupList: [
-        {
-          title: String,
-          link: String,
-          accepted: Boolean,
-        },
-      ],
-    },
-  ],
+  sharedTodo: {
+    groupList: [
+      {
+        title: String,
+        link: String,
+      },
+    ],
+    invitations: [
+      {
+        title: String,
+        link: String,
+        accepted: Boolean,
+      },
+    ],
+  },
+  finance: {
+    groupList: [
+      {
+        title: String,
+        link: String,
+        accepted: Boolean,
+      },
+    ],
+    invitations: [
+      {
+        title: String,
+        link: String,
+        accepted: Boolean,
+      },
+    ],
+  },
 });
 
 // Use a singular model name (UserData instead of UserDatas)

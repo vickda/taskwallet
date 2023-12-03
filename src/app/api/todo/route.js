@@ -22,7 +22,7 @@ export async function POST(req, { params }) {
 
     if (!data) throw "No Data";
 
-    console.log(data, "Inside Todo/ Post Method");
+    console.log(data, "Inside Todo Post Method");
 
     await connectMongoDB();
 
