@@ -12,7 +12,10 @@ export default async function Todo() {
   return (
     <>
       <Navbar />
-      <TodoList email={session.user?.email} />
+      <TodoList
+        url={`${process.env.URL}/api/todo?`}
+        email={session.user?.email}
+      />
     </>
   );
 }

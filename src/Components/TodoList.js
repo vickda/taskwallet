@@ -3,9 +3,7 @@
 import { useEffect, useState } from "react";
 import Modal from "../Components/Modal";
 
-const url = `http://localhost:3000/api/todo?`;
-
-const addTodo = async (newTodo, email) => {
+const addTodo = async (newTodo, email, url) => {
   try {
     await fetch(`${url}${new URLSearchParams({ email })}`, {
       method: "POST",
@@ -20,7 +18,7 @@ const addTodo = async (newTodo, email) => {
     console.log("Cannot add todo in db", error);
   }
 };
-const deleteTodo = async (email, id) => {
+const deleteTodo = async (email, id, url) => {
   try {
     await fetch(`${url}${new URLSearchParams({ email: email, todoId: id })}`, {
       method: "DELETE",
@@ -30,7 +28,7 @@ const deleteTodo = async (email, id) => {
     console.log("Cannot Delete todo in db", error);
   }
 };
-const updateTodo = async (email, id, newTodo) => {
+const updateTodo = async (email, id, newTodo, url) => {
   try {
     await fetch(`${url}${new URLSearchParams({ email: email, todoId: id })}`, {
       method: "PUT",
@@ -46,7 +44,7 @@ const updateTodo = async (email, id, newTodo) => {
   }
 };
 
-function TodoList({ email }) {
+function TodoList({ url, email }) {
   // state for the input value
   const [value, setValue] = useState("");
 
@@ -70,7 +68,7 @@ function TodoList({ email }) {
       const newTodo = { title: value, done: false };
 
       // Add data into db
-      await addTodo(newTodo, email);
+      await addTodo(newTodo, email, url);
 
       // update the todo list with the new todo
       await fetchData();
@@ -91,13 +89,13 @@ function TodoList({ email }) {
     // set the done property of the todo at the index to true
     newTodos[index].done = true;
 
-    await updateTodo(email, id, newTodos[index]);
+    await updateTodo(email, id, newTodos[index], url);
     await fetchData();
   };
 
   // function to handle todo deletion
   const handleDelete = async (id) => {
-    await deleteTodo(email, id);
+    await deleteTodo(email, id, url);
 
     // filter out the todo with the given id
     const newTodos = todos.filter((todo) => todo.id !== id);
