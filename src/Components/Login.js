@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import logo1 from "../images/logo1.jpg";
 import GoogleIcon from "../images/google-icon.png";
 import GitHubIcon from "../images/githubicon.png";
-import "../css/globals.css";
+import "../app/globals.css";
 
 const Login = () => {
   return (
