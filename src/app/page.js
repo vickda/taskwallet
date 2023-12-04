@@ -21,14 +21,14 @@ const createNewUser = async (email, username) => {
     },
   };
 
-  const data = await fetch(`${process.env.URL}/api/user/${email}`, {
+  const data = await fetch(`/api/user/${email}`, {
     method: "GET",
   }).then((res) => res.json());
 
   const isUserCreated = await data["userdata"];
 
   if (!isUserCreated) {
-    await fetch(`${process.env.URL}/api/user`, {
+    await fetch(`/api/user`, {
       method: "POST",
       mode: "cors",
       headers: { "Content-Type": "application/json" },

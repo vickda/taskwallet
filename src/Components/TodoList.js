@@ -7,7 +7,7 @@ const url = `http://localhost:3000/api/todo?`;
 
 const addTodo = async (newTodo, email) => {
   try {
-    await fetch(`${url}${new URLSearchParams({ email })}`, {
+    await fetch(`/api/todo?${new URLSearchParams({ email })}`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -22,25 +22,31 @@ const addTodo = async (newTodo, email) => {
 };
 const deleteTodo = async (email, id) => {
   try {
-    await fetch(`${url}${new URLSearchParams({ email: email, todoId: id })}`, {
-      method: "DELETE",
-      mode: "cors",
-    });
+    await fetch(
+      `/api/todo?${new URLSearchParams({ email: email, todoId: id })}`,
+      {
+        method: "DELETE",
+        mode: "cors",
+      }
+    );
   } catch (error) {
     console.log("Cannot Delete todo in db", error);
   }
 };
 const updateTodo = async (email, id, newTodo) => {
   try {
-    await fetch(`${url}${new URLSearchParams({ email: email, todoId: id })}`, {
-      method: "PUT",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify(newTodo),
-    });
+    await fetch(
+      `/api/todo?${new URLSearchParams({ email: email, todoId: id })}`,
+      {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(newTodo),
+      }
+    );
   } catch (error) {
     console.log("Cannot Delete todo in db", error);
   }
@@ -123,11 +129,14 @@ function TodoList({ email }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${url}${new URLSearchParams({ email })}`, {
-        method: "GET",
-        mode: "cors",
-        cache: "no-store",
-      });
+      const response = await fetch(
+        `/api/todo?${new URLSearchParams({ email })}`,
+        {
+          method: "GET",
+          mode: "cors",
+          cache: "no-store",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch todos");
