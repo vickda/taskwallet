@@ -1,17 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CreateGroupModal from "./CreateGroupModal";
 import InviteGroupModal from "../Components/InviteGroupModal";
-
-// A dummy array of data for demonstration purposes
-const data = [
-  { title: "Learn Next.js", id: 1 },
-  { title: "Build a Todo app", id: 2 },
-  { title: "Deploy to Vercel", id: 3 },
-];
+import fetchGroupData from "../libs/fetchGroupData";
 
 // A custom component that renders a card with a title and a join button
-const Card = ({ title, id }) => {
+const Card = ({ title, id, link }) => {
   // A function that handles the join button click
   const handleJoin = () => {
     // Do something when the user clicks the join button
@@ -19,14 +13,15 @@ const Card = ({ title, id }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-4 m-2">
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <button
-        className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-2"
-        onClick={handleJoin}
+    <div className="bg-white shadow-lg rounded-lg p-4 m-2 flex flex-col items-center">
+      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+      <a
+        href={`/sharedtodo/${link}`}
+        className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+        // onClick={handleJoin}
       >
         Join
-      </button>
+      </a>
     </div>
   );
 };
@@ -37,9 +32,16 @@ const DisplayGroups = ({ email }) => {
   const [isInviteGroupModalOpen, setInviteGroupModalOpen] = useState(false);
 
   const [inviteData, setInviteData] = useState();
-  const [groups, setGroups] = useState();
+  const [groups, setGroups] = useState([
+    { title: "Test", id: 1 },
+    // { title: "Build a Todo app", id: 2 },
+    // { title: "Deploy to Vercel", id: 3 },
+  ]);
 
-  const getGroupData = () => {};
+  const getGroupData = async () => {
+    const data = await fetchGroupData(email);
+    setGroups(data.groupList);
+  };
 
   const getInviteData = () => {};
 
@@ -49,6 +51,9 @@ const DisplayGroups = ({ email }) => {
   // A function that handles the view invitations button click
   const handleView = () => setInviteGroupModalOpen(true);
 
+  useEffect(() => {
+    getGroupData();
+  }, []);
   return (
     <div className="container mx-auto">
       <div className="flex justify-center">
@@ -66,9 +71,12 @@ const DisplayGroups = ({ email }) => {
         </button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {data.map((item) => (
-          <Card key={item.id} title={item.title} id={item.id} />
-        ))}
+        {groups.map(
+          (item, id) =>
+            item.title && (
+              <Card key={id} title={item.title} id={item.id} link={item.link} />
+            )
+        )}
       </div>
 
       {/* Render the Modals */}
@@ -76,6 +84,7 @@ const DisplayGroups = ({ email }) => {
         <CreateGroupModal
           isOpen={isCreateGroupModalOpen}
           onClose={setCreateGroupModalOpen}
+          email={email}
         />
       )}
 

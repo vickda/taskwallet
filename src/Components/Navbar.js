@@ -88,7 +88,12 @@ const Navbar = () => {
               key={-1}
               className="px-4 cursor-pointer capitalize py-6 text-4xl"
             >
-              <button className="nav-link" onClick={() => signOut()}>
+              <button
+                className="nav-link"
+                onClick={() => {
+                  signOut();
+                }}
+              >
                 Signout
               </button>
             </li>

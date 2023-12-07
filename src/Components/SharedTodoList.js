@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Modal from "./ErrorModal";
+import { usePathname } from "next/navigation";
 
-const addTodo = async (newTodo, email, url) => {
+const addTodo = async (newTodo, email, url, partlink) => {
   try {
-    await fetch(`${url}${new URLSearchParams({ email })}`, {
+    await fetch(`${url}?${new URLSearchParams({ partlink })}`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -18,35 +19,47 @@ const addTodo = async (newTodo, email, url) => {
     console.log("Cannot add todo in db", error);
   }
 };
-const deleteTodo = async (email, id, url) => {
+const deleteTodo = async (email, id, url, partlink) => {
   try {
-    await fetch(`${url}${new URLSearchParams({ email: email, todoId: id })}`, {
-      method: "DELETE",
-      mode: "cors",
-    });
+    await fetch(
+      `${url}?${new URLSearchParams({ link: partlink, todoId: id })}`,
+      {
+        method: "DELETE",
+        mode: "cors",
+      }
+    );
   } catch (error) {
     console.log("Cannot Delete todo in db", error);
   }
 };
-const updateTodo = async (email, id, newTodo, url) => {
+const updateTodo = async (email, id, newTodo, url, partlink) => {
   try {
-    await fetch(`${url}${new URLSearchParams({ email: email, todoId: id })}`, {
-      method: "PUT",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify(newTodo),
-    });
+    await fetch(
+      `${url}?${new URLSearchParams({ link: partlink, todoId: id })}`,
+      {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(newTodo),
+      }
+    );
   } catch (error) {
     console.log("Cannot Delete todo in db", error);
   }
 };
 
-function TodoList({ url, email }) {
+function SharedTodoList({ url, email }) {
   // state for the input value
   const [value, setValue] = useState("");
+  const path = usePathname();
+  let partlink;
+  if (!url) {
+    partlink = path.split("/")[2];
+    url = `/api/link/${partlink}`;
+  }
 
   // state for the todo list
   const [todos, setTodos] = useState([]);
@@ -68,7 +81,7 @@ function TodoList({ url, email }) {
       const newTodo = { title: value, done: false };
 
       // Add data into db
-      await addTodo(newTodo, email, url);
+      await addTodo(newTodo, email, url, partlink);
 
       // update the todo list with the new todo
       await fetchData();
@@ -89,13 +102,13 @@ function TodoList({ url, email }) {
     // set the done property of the todo at the index to true
     newTodos[index].done = true;
 
-    await updateTodo(email, id, newTodos[index], url);
+    await updateTodo(email, id, newTodos[index], url, partlink);
     await fetchData();
   };
 
   // function to handle todo deletion
   const handleDelete = async (id) => {
-    await deleteTodo(email, id, url);
+    await deleteTodo(email, id, url, partlink);
 
     // filter out the todo with the given id
     const newTodos = todos.filter((todo) => todo.id !== id);
@@ -121,11 +134,14 @@ function TodoList({ url, email }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${url}${new URLSearchParams({ email })}`, {
-        method: "GET",
-        mode: "cors",
-        cache: "no-store",
-      });
+      const response = await fetch(
+        `${url}?${new URLSearchParams({ link: partlink })}`,
+        {
+          method: "GET",
+          mode: "cors",
+          cache: "no-store",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch todos");
@@ -217,4 +233,4 @@ function TodoList({ url, email }) {
   );
 }
 
-export default TodoList;
+export default SharedTodoList;

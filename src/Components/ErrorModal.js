@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const Modal = ({ message }) => {
+const ErrorModal = ({ message, color }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const Modal = ({ message }) => {
 
   return (
     <div
-      className={`fixed bottom-5 right-5 bg-blue-500 text-white p-4 rounded-md transition-opacity ${
+      className={`fixed bottom-5 right-5 ${color} text-white p-4 rounded-md transition-opacity ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -22,4 +22,9 @@ const Modal = ({ message }) => {
   );
 };
 
-export default Modal;
+/**
+ * bg-red-600
+ * bg-blue-500
+ */
+
+export default ErrorModal;

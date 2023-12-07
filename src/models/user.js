@@ -25,13 +25,6 @@ const userTodoSchema = new Schema({
         link: String,
       },
     ],
-    invitations: [
-      {
-        title: String,
-        link: String,
-        accepted: Boolean,
-      },
-    ],
   },
   finance: {
     groupList: [
