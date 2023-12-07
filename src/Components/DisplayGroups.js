@@ -16,6 +16,8 @@ const Card = ({ title, id, link }) => {
     <div className="bg-white shadow-lg rounded-lg p-4 m-2 flex flex-col items-center">
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       <a
+        target="_blank"
+        rel="noopener noreferrer"
         href={`/sharedtodo/${link}`}
         className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
         // onClick={handleJoin}
@@ -33,13 +35,14 @@ const DisplayGroups = ({ email }) => {
 
   const [inviteData, setInviteData] = useState();
   const [groups, setGroups] = useState([
-    { title: "Test", id: 1 },
+    { title: "Hello", id: 1 },
     // { title: "Build a Todo app", id: 2 },
     // { title: "Deploy to Vercel", id: 3 },
   ]);
 
   const getGroupData = async () => {
     const data = await fetchGroupData(email);
+    console.log(data);
     setGroups(data.groupList);
   };
 
