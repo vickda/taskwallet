@@ -2,6 +2,7 @@ import connectMongoDB from "../../../libs/mongodb";
 import LinkTodo from "../../../models/linkTodo";
 import { NextResponse } from "next/server";
 import postSendInviteEmails from "../../../libs/postSendInviteEmails";
+import putGroupToUser from "../../../libs/putGroupToUser";
 
 export async function GET(req, { params }) {
   const link = req.nextUrl.searchParams.get("link");
@@ -19,6 +20,7 @@ export async function POST(req, { params }) {
   try {
     const data = await req.json();
     const userArr = data["users"];
+    let inviteremail = userArr[0]["email"];
 
     if (!data) throw "No Data";
 
@@ -26,7 +28,10 @@ export async function POST(req, { params }) {
 
     await LinkTodo.create(data);
 
-    let inviteremail = userArr[0]["email"];
+    // Add Inviter group in their db
+    await putGroupToUser(inviteremail, data["link"], data["title"]);
+
+    // Send Email Invites to every user
     for (let i = 1; i < userArr.length; i++) {
       const body = {
         inviterEmail: inviteremail,

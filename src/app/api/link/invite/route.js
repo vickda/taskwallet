@@ -2,7 +2,7 @@ import connectMongoDB from "../../../../libs/mongodb";
 import LinkTodo from "../../../../models/linkTodo";
 import UserData from "../../../../models/user";
 import { NextResponse } from "next/server";
-import addGroupToUser from "../../../../libs/putGroupToUser";
+import putGroupToUser from "../../../../libs/putGroupToUser";
 import getLinkTitle from "../../../../libs/fetchLinkTitle";
 
 export async function GET(req, { params }) {
@@ -20,7 +20,7 @@ export async function GET(req, { params }) {
     if (status === "accepted") {
       user[0].status = true;
       const title = await getLinkTitle(link);
-      await addGroupToUser(email, link, title);
+      await putGroupToUser(email, link, title);
     }
   }
 
