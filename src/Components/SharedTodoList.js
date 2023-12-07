@@ -59,6 +59,7 @@ function SharedTodoList({ url, email }) {
   if (!url) {
     partlink = path.split("/")[2];
     url = `/api/link/${partlink}`;
+    console.log(url, partlink, "Inside Shared to List");
   }
 
   // state for the todo list
