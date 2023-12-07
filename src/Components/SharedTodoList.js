@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Modal from "./ErrorModal";
 import { usePathname } from "next/navigation";
+import getRandomColor from "../libs/getRandomColor";
 
 const addTodo = async (newTodo, email, url, partlink) => {
   try {
@@ -49,6 +50,7 @@ const updateTodo = async (email, id, newTodo, url, partlink) => {
 function SharedTodoList({ url, email }) {
   // state for the input value
   const [value, setValue] = useState("");
+  const [gradientColors, setGradientColors] = useState("");
   const path = usePathname();
   let partlink = path.split("/")[2];
   url = url.concat(partlink);
@@ -142,13 +144,26 @@ function SharedTodoList({ url, email }) {
     }
   };
 
-  // // Use effect to fill data from database
+  // Use effect to fill data from database
   useEffect(() => {
     fetchData();
   }, []);
 
+  // Useeffect to generate random color
+  useEffect(() => {
+    // Generate random gradient colors
+    const color1 = getRandomColor();
+    const color2 = getRandomColor();
+
+    // Set the gradient colors when the component mounts
+    setGradientColors(`linear-gradient(to right, ${color1}, ${color2})`);
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-teal-400 via-cyan-500 to-cyan-600">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center"
+      style={{ background: gradientColors }}
+    >
       <h1 className="text-6xl font-bold text-white mb-10">TODO List</h1>
       <form onSubmit={handleSubmit} className="flex w-3/4 md:w-1/2">
         <input

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Modal from "./ErrorModal";
+import getRandomColor from "../libs/getRandomColor";
 
 const addTodo = async (newTodo, email, url) => {
   try {
@@ -53,6 +54,9 @@ function TodoList({ url, email }) {
 
   // state for the active tab
   const [active, setActive] = useState("All");
+
+  // State for random color
+  const [gradientColors, setGradientColors] = useState("");
 
   // function to handle input change
   const handleChange = (e) => {
@@ -143,8 +147,21 @@ function TodoList({ url, email }) {
     fetchData();
   }, []);
 
+  // Useeffect to generate random color
+  useEffect(() => {
+    // Generate random gradient colors
+    const color1 = getRandomColor();
+    const color2 = getRandomColor();
+
+    // Set the gradient colors when the component mounts
+    setGradientColors(`linear-gradient(to right, ${color1}, ${color2})`);
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-teal-400 via-cyan-500 to-cyan-600">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center"
+      style={{ background: gradientColors }}
+    >
       <h1 className="text-6xl font-bold text-white mb-10">TODO List</h1>
       <form onSubmit={handleSubmit} className="flex w-3/4 md:w-1/2">
         <input
