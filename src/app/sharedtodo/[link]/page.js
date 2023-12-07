@@ -14,7 +14,7 @@ export default async function SharedTodo() {
     <>
       <Navbar />
 
-      <SharedTodoList email={email} />
+      <SharedTodoList url={`${process.env.URL}/api/link/`} email={email} />
       {/* <div className="todo min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-indigo-800 via-blue-900 to-purple-900">
       </div> */}
     </>

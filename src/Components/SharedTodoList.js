@@ -55,11 +55,8 @@ function SharedTodoList({ url, email }) {
   // state for the input value
   const [value, setValue] = useState("");
   const path = usePathname();
-  let partlink;
-  if (!url) {
-    partlink = path.split("/")[2];
-    url = `/api/link/${partlink}`;
-  }
+  let partlink = path.split("/")[2];
+  url = url.concat(partlink);
 
   // state for the todo list
   const [todos, setTodos] = useState([]);
@@ -135,12 +132,11 @@ function SharedTodoList({ url, email }) {
   const fetchData = async () => {
     try {
       console.log(
-        `${process.env.URL}${url}?${new URLSearchParams({ link: partlink })}`,
-        "Inside Fetch Data"
+        `${url}?${new URLSearchParams({ link: partlink })}`,
+        "Inside fetch"
       );
-
       const response = await fetch(
-        `${process.env.URL}${url}?${new URLSearchParams({ link: partlink })}`,
+        `${url}?${new URLSearchParams({ link: partlink })}`,
         {
           method: "GET",
           mode: "cors",
