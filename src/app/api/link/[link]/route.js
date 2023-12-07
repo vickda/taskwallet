@@ -5,7 +5,6 @@ import LinkTodo from "../../../../models/linkTodo";
 // GET REQUEST
 export async function GET(req, { params }) {
   const { link } = params;
-  console.log(link, "Inside GET of Link", params);
   await connectMongoDB();
 
   const linkdata = await LinkTodo.findOne({ link });
@@ -18,7 +17,7 @@ export async function GET(req, { params }) {
 
 export async function POST(req, { params }) {
   try {
-    const link = req.nextUrl.searchParams.get("partlink");
+    const { link } = params;
     const data = await req.json();
 
     if (!data) throw "No Data";
@@ -54,8 +53,7 @@ export async function POST(req, { params }) {
 
 export async function DELETE(req, { params }) {
   try {
-    const link = req.nextUrl.searchParams.get("link");
-    const todoId = req.nextUrl.searchParams.get("todoId");
+    const { link, todoId } = await req.json();
 
     await console.log("Inside Delete TODO Route", todoId);
     await connectMongoDB();
@@ -63,7 +61,7 @@ export async function DELETE(req, { params }) {
     // Find the user by link
     const linkTodo = await LinkTodo.findOne({ link });
 
-    console.log(linkTodo);
+    // console.log(linkTodo);
 
     // Find the index of the todo with the specified todoId
     const todoIndex = linkTodo.todos.findIndex(
@@ -101,10 +99,8 @@ export async function DELETE(req, { params }) {
 
 export async function PUT(req, { params }) {
   try {
-    const link = req.nextUrl.searchParams.get("link");
-    const todoId = req.nextUrl.searchParams.get("todoId");
-
-    const data = await req.json();
+    const { link, todoId, data } = await req.json();
+    console.log(data, "Inside DELTE of Link", params);
 
     console.log("inside put", data, todoId);
 

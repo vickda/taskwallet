@@ -21,31 +21,26 @@ const addTodo = async (newTodo, email, url, partlink) => {
 };
 const deleteTodo = async (email, id, url, partlink) => {
   try {
-    await fetch(
-      `${url}?${new URLSearchParams({ link: partlink, todoId: id })}`,
-      {
-        method: "DELETE",
-        mode: "cors",
-      }
-    );
+    await fetch(`${url}`, {
+      method: "DELETE",
+      mode: "cors",
+      body: JSON.stringify({ link: partlink, todoId: id }),
+    });
   } catch (error) {
     console.log("Cannot Delete todo in db", error);
   }
 };
 const updateTodo = async (email, id, newTodo, url, partlink) => {
   try {
-    await fetch(
-      `${url}?${new URLSearchParams({ link: partlink, todoId: id })}`,
-      {
-        method: "PUT",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify(newTodo),
-      }
-    );
+    await fetch(`${url}`, {
+      method: "PUT",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({ data: newTodo, link: partlink, todoId: id }),
+    });
   } catch (error) {
     console.log("Cannot Delete todo in db", error);
   }
@@ -131,10 +126,6 @@ function SharedTodoList({ url, email }) {
 
   const fetchData = async () => {
     try {
-      console.log(
-        `${url}?${new URLSearchParams({ link: partlink })}`,
-        "Inside fetch"
-      );
       const response = await fetch(
         `${url}?${new URLSearchParams({ link: partlink })}`,
         { method: "GET" }
