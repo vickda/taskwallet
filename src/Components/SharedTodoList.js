@@ -137,11 +137,7 @@ function SharedTodoList({ url, email }) {
       );
       const response = await fetch(
         `${url}?${new URLSearchParams({ link: partlink })}`,
-        {
-          method: "GET",
-          mode: "cors",
-          cache: "no-store",
-        }
+        { method: "GET" }
       );
 
       if (!response.ok) {
