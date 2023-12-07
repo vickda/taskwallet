@@ -5,6 +5,7 @@ import LinkTodo from "../../../../models/linkTodo";
 // GET REQUEST
 export async function GET(req, { params }) {
   const link = req.nextUrl.searchParams.get("link");
+  console.log(link, "Inside GET of Link");
   await connectMongoDB();
 
   const linkdata = await LinkTodo.findOne({ link });
