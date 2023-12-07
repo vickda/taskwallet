@@ -135,12 +135,12 @@ function SharedTodoList({ url, email }) {
   const fetchData = async () => {
     try {
       console.log(
-        `${url}?${new URLSearchParams({ link: partlink })}`,
+        `${process.env.URL}${url}?${new URLSearchParams({ link: partlink })}`,
         "Inside Fetch Data"
       );
 
       const response = await fetch(
-        `${url}?${new URLSearchParams({ link: partlink })}`,
+        `${process.env.URL}${url}?${new URLSearchParams({ link: partlink })}`,
         {
           method: "GET",
           mode: "cors",
