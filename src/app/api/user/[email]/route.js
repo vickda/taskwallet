@@ -48,9 +48,11 @@ export async function POST(req, { params }) {
 
 export async function PUT(req, { params }) {
   try {
-    const email = req.nextUrl.searchParams.get("email");
-    const link = req.nextUrl.searchParams.get("link");
-    const title = req.nextUrl.searchParams.get("title");
+    // const email = req.nextUrl.searchParams.get("email");
+    // const link = req.nextUrl.searchParams.get("link");
+    // const title = req.nextUrl.searchParams.get("title");
+
+    const { email, link, title } = await req.json();
 
     await connectMongoDB();
 
