@@ -35,7 +35,7 @@ const DisplayGroups = ({ email }) => {
 
   const [inviteData, setInviteData] = useState();
   const [groups, setGroups] = useState([
-    { title: "Hello", id: 1 },
+    // { title: "Hello", id: 1 },
     // { title: "Build a Todo app", id: 2 },
     // { title: "Deploy to Vercel", id: 3 },
   ]);

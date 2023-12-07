@@ -59,7 +59,6 @@ function SharedTodoList({ url, email }) {
   if (!url) {
     partlink = path.split("/")[2];
     url = `/api/link/${partlink}`;
-    console.log(url, partlink, "Inside Shared to List");
   }
 
   // state for the todo list
@@ -135,6 +134,11 @@ function SharedTodoList({ url, email }) {
 
   const fetchData = async () => {
     try {
+      console.log(
+        `${url}?${new URLSearchParams({ link: partlink })}`,
+        "Inside Fetch Data"
+      );
+
       const response = await fetch(
         `${url}?${new URLSearchParams({ link: partlink })}`,
         {
