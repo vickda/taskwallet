@@ -12,7 +12,7 @@ const UnderMaintenance = () => {
         />
         <h2 className="text-xl font-bold mb-2">Under Maintenance</h2>
         <p className="text-gray-600">
-          We're working on something new. Please check back later.
+          We are working on something new. Please check back later.
         </p>
       </div>
     </div>
