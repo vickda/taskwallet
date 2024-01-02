@@ -12,7 +12,7 @@ export default async function finance() {
   return (
     <>
       <Navbar />
-      <div className="todo min-h-screen flex flex-col items-center justify-center bg-gray-300">
+      <div className="todo min-h-screen flex flex-col items-center justify-center bg-zinc-100	">
         <UnderMaintenance />
       </div>
     </>
